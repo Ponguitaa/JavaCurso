@@ -26,8 +26,8 @@ public class ProductoDaoImpl implements ProductoDao {
 
         String sql = """
                 INSERT INTO producto 
-                    (nombre, precio, id_categoria)
-                VALUES (?, ?, ?)
+                    (id, nombre, precio, id_categoria)
+                VALUES (?, ?, ?, ?)
                 """;
 
         int result;
@@ -35,9 +35,10 @@ public class ProductoDaoImpl implements ProductoDao {
         try(Connection conn = MyDataSource.getConnection();
             PreparedStatement pstm = conn.prepareStatement(sql)) {
 
-            pstm.setString(1, prod.getNombre());
-            pstm.setDouble(2, prod.getPrecio());
-            pstm.setInt(3, prod.getCategoria().getId());
+            pstm.setInt(1, prod.getId());
+            pstm.setString(2, prod.getNombre());
+            pstm.setDouble(3, prod.getPrecio());
+            pstm.setInt(4, prod.getCategoria().getId());
 
             System.out.println(prod.getCategoria());
 

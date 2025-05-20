@@ -36,29 +36,21 @@ public class Menu {
             opcion = reader.nextInt();
 
             switch (opcion) {
-                case 1: listAll();
-                    break;
-                case 2: listById();
-                    break;
-                case 3: insert();
-                    break;
-                case 4: update();
-                    break;
-                case 5: delete();
-                    break;
-                case 6: listAllProductos();
-                    break;
-                case 7: insertProducto();
-                    break;
-                case 8: listAllCategorias();
-                    break;
-                case 9: insertCategoria();
-                    break;
-                case 0:
-                    System.out.println("\nSaliendo del programa...\n");
-                    break;
-                default:
-                    System.err.println("\nEl número introducido no se corresponde con una operación válida\n\n");
+                case 1: listAll(); break;
+                case 2: listById(); break;
+                case 3: insert(); break;
+                case 4: update(); break;
+                case 5: delete(); break;
+                case 6: listAllProductos(); break;
+                case 7: insertProducto(); break;
+                case 8: updateProducto(); break;
+                case 9: deleteProducto(); break;
+                case 10: listAllCategorias(); break;
+                case 11: insertCategoria(); break;
+                case 12: updateCategoria(); break;
+                case 13: deleteCategoria(); break;
+                case 0: System.out.println("\nSaliendo del programa...\n"); break;
+                default: System.err.println("\nEl número introducido no se corresponde con una operación válida\n\n");
             }
         } while (opcion != 0);
     }
@@ -68,7 +60,6 @@ public class Menu {
         System.out.println("SISTEMA DE GESTIÓN DE EMPLEADOS");
         System.out.println("===============================\n");
         System.out.println("\n-> Introduzca una opción de entre las siguientes\n");
-        System.out.println("0: Salir");
         System.out.println("1: Listar todos los empleados");
         System.out.println("2: Listar un empleado por su ID");
         System.out.println("3: Insertar un nuevo empleado");
@@ -76,8 +67,13 @@ public class Menu {
         System.out.println("5: Eliminar un empleado");
         System.out.println("6: Listar todos los productos");
         System.out.println("7: Insertar un producto");
-        System.out.println("8: Listar todas las categorías");
-        System.out.println("9: Insertar una categoría");
+        System.out.println("8: Editar un producto");
+        System.out.println("9: Eliminar un producto");
+        System.out.println("10: Listar todas las categorías");
+        System.out.println("11: Insertar una categoría");
+        System.out.println("12: Editar una categoría");
+        System.out.println("13: Eliminar una categoría");
+        System.out.println("0: Salir");
         System.out.print("\nOpción: ");
     }
 
@@ -356,11 +352,13 @@ public class Menu {
         System.out.println("\nINSERCIÓN DE NUEVA CATEGORÍA");
         System.out.println("-----------------------------\n");
 
+        System.out.print("Introduzca el ID de la categoría: ");
+        int id = reader.nextInt();
         System.out.print("Introduzca el nombre de la categoría: ");
         String nombre = reader.nextLine();
 
         try {
-            categoriaDao.add(new Categoria(nombre));
+            categoriaDao.add(new Categoria(id, nombre));
             System.out.println("Nueva categoría registrada");
         } catch (SQLException ex) {
             System.err.println("Error insertando la categoría: " + ex.getMessage());
@@ -389,6 +387,8 @@ public class Menu {
         System.out.println("\nINSERCIÓN DE NUEVO PRODUCTO");
         System.out.println("-----------------------------\n");
 
+        System.out.print("Introduzca el ID del producto: ");
+        int id = reader.nextInt();
         System.out.print("Introduzca el nombre del producto: ");
         String nombre = reader.nextLine();
 
@@ -412,11 +412,114 @@ public class Menu {
                 return;
             }
 
-            productoDao.add(new Producto(nombre, precio, categoria));
+            productoDao.add(new Producto(id, nombre, precio, categoria));
             System.out.println("Nuevo producto registrado.");
 
         } catch (SQLException ex) {
             System.err.println("Error insertando el producto: " + ex.getMessage());
+        }
+        System.out.println("");
+    }
+
+    /** Editar producto existente */
+    public void updateProducto() {
+        System.out.println("\nACTUALIZACIÓN DE UN PRODUCTO");
+        System.out.println("---------------------------\n");
+        try {
+            System.out.print("Introduzca el ID del producto a actualizar: ");
+            int id = reader.nextInt();
+            Producto prod = productoDao.getById(id);
+            if (prod == null) {
+                System.out.println("Producto no encontrado con ese ID.");
+                return;
+            }
+            System.out.println("Producto actual: " + prod);
+            System.out.print("Nuevo nombre (" + prod.getNombre() + "): ");
+            String nombre = reader.nextLine();
+            nombre = nombre.isBlank() ? prod.getNombre() : nombre;
+            System.out.print("Nuevo precio (" + prod.getPrecio() + "): ");
+            String strPrecio = reader.nextLine();
+            double precio = strPrecio.isBlank() ? prod.getPrecio() : Double.parseDouble(strPrecio);
+            // Selección de categoría
+            List<Categoria> cats = categoriaDao.getAll();
+            if (cats.isEmpty()) {
+                System.out.println("No hay categorías disponibles.");
+                return;
+            }
+            System.out.println("Seleccione nueva categoría:");
+            cats.forEach(c -> System.out.println(c.getId() + ": " + c.getNombre()));
+            int idCat = reader.nextInt();
+            Categoria cat = categoriaDao.getById(idCat);
+            prod.setNombre(nombre);
+            prod.setPrecio(precio);
+            prod.setCategoria(cat);
+            productoDao.update(prod);
+            System.out.println("Producto actualizado.");
+        } catch (SQLException ex) {
+            System.err.println("Error actualizando el producto: " + ex.getMessage());
+        }
+        System.out.println("");
+    }
+
+    /** Eliminar producto existente */
+    public void deleteProducto() {
+        System.out.println("\nBORRADO DE UN PRODUCTO");
+        System.out.println("----------------------\n");
+        try {
+            System.out.print("Introduzca el ID del producto a eliminar: ");
+            int id = reader.nextInt();
+            System.out.print("¿Confirma eliminación del producto ID=" + id + "? (s/n): ");
+            String resp = reader.nextLine();
+            if (resp.equalsIgnoreCase("s")) {
+                productoDao.delete(id);
+                System.out.println("Producto eliminado.");
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error eliminando el producto: " + ex.getMessage());
+        }
+        System.out.println("");
+    }
+
+    /** Editar categoría existente */
+    public void updateCategoria() {
+        System.out.println("\nACTUALIZACIÓN DE UNA CATEGORÍA");
+        System.out.println("-------------------------------\n");
+        try {
+            System.out.print("Introduzca el ID de la categoría a actualizar: ");
+            int id = reader.nextInt();
+            Categoria cat = categoriaDao.getById(id);
+            if (cat == null) {
+                System.out.println("Categoría no encontrada con ese ID.");
+                return;
+            }
+            System.out.println("Categoría actual: " + cat);
+            System.out.print("Nuevo nombre (" + cat.getNombre() + "): ");
+            String nombre = reader.nextLine();
+            nombre = nombre.isBlank() ? cat.getNombre() : nombre;
+            cat.setNombre(nombre);
+            categoriaDao.update(cat);
+            System.out.println("Categoría actualizada.");
+        } catch (SQLException ex) {
+            System.err.println("Error actualizando la categoría: " + ex.getMessage());
+        }
+        System.out.println("");
+    }
+
+    /** Eliminar categoría existente */
+    public void deleteCategoria() {
+        System.out.println("\nBORRADO DE UNA CATEGORÍA");
+        System.out.println("-------------------------\n");
+        try {
+            System.out.print("Introduzca el ID de la categoría a eliminar: ");
+            int id = reader.nextInt();
+            System.out.print("¿Confirma eliminación de la categoría ID=" + id + "? (s/n): ");
+            String resp = reader.nextLine();
+            if (resp.equalsIgnoreCase("s")) {
+                categoriaDao.delete(id);
+                System.out.println("Categoría eliminada.");
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error eliminando la categoría: " + ex.getMessage());
         }
         System.out.println("");
     }

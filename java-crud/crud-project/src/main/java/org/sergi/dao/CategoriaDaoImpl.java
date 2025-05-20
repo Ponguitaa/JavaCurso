@@ -25,8 +25,8 @@ public class CategoriaDaoImpl implements CategoriaDao {
     public int add(Categoria cat) throws SQLException {
 
         String sql = """
-                INSERT INTO categoria (nombre)
-                VALUES (?)
+                INSERT INTO categoria (id, nombre)
+                VALUES (?, ?)
                 """;
 
         int result;
@@ -34,7 +34,8 @@ public class CategoriaDaoImpl implements CategoriaDao {
         try(Connection conn = MyDataSource.getConnection();
             PreparedStatement pstm = conn.prepareStatement(sql)) {
 
-            pstm.setString(1, cat.getNombre());
+            pstm.setInt(1, cat.getId());
+            pstm.setString(2, cat.getNombre());
 
             result = pstm.executeUpdate();
 
