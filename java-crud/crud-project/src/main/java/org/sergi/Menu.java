@@ -1,9 +1,9 @@
-package org.alex;
+package org.sergi;
 
-import org.alex.dao.*;
-import org.alex.model.Categoria;
-import org.alex.model.Empleado;
-import org.alex.model.Producto;
+import org.sergi.dao.*;
+import org.sergi.model.Categoria;
+import org.sergi.model.Empleado;
+import org.sergi.model.Producto;
 
 import java.io.*;
 import java.sql.SQLException;

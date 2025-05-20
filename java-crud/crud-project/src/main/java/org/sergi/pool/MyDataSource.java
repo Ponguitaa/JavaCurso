@@ -1,4 +1,4 @@
-package org.alex.pool;
+package org.sergi.pool;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

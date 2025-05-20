@@ -1,9 +1,9 @@
-package org.alex;
+package org.sergi;
 
-import org.alex.dao.EmpleadoDao;
-import org.alex.dao.EmpleadoDaoImpl;
-import org.alex.model.Empleado;
-import org.alex.pool.MyDataSource;
+import org.sergi.dao.EmpleadoDao;
+import org.sergi.dao.EmpleadoDaoImpl;
+import org.sergi.model.Empleado;
+import org.sergi.pool.MyDataSource;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

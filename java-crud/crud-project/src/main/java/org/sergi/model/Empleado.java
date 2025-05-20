@@ -1,4 +1,4 @@
-package org.alex.model;
+package org.sergi.model;
 
 import java.time.LocalDate;
 import java.util.Objects;

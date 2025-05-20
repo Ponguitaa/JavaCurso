@@ -1,7 +1,7 @@
-package org.alex.dao;
+package org.sergi.dao;
 
-import org.alex.model.Producto;
-import org.alex.pool.MyDataSource;
+import org.sergi.model.Producto;
+import org.sergi.pool.MyDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;

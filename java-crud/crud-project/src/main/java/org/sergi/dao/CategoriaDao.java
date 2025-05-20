@@ -1,6 +1,6 @@
-package org.alex.dao;
+package org.sergi.dao;
 
-import org.alex.model.Categoria;
+import org.sergi.model.Categoria;
 
 import java.sql.SQLException;
 import java.util.List;
