@@ -1,32 +1,25 @@
+version: '3.8'
 services:
   mysql:
-    image: mysql:8
-    ports:
-      - "3306:3306"
+    image: mysql:5.7
+    container_name: jdbcDatabase
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: empresa
+      MYSQL_DATABASE: jbdc
       MYSQL_USER: user
       MYSQL_PASSWORD: password
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    ports:
+      - "4000:3306"
     volumes:
-      - mysql_crud_data:/var/lib/mysql
-
+      - mysql_jdbc_data:/var/lib/mysql
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
-      - "8081:80"  
+      - 8081:80
     environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-      PMA_ARBITRARY: 1
+      - PMA_HOST=mysql
     depends_on:
-      mysql:
-        condition: service_healthy
-
+      - mysql
 volumes:
-  mysql_crud_data:
+  mysql_jdbc_data:

@@ -9,10 +9,8 @@ import java.sql.SQLException;
 public class MyDataSource {
 
     private static HikariConfig config = new HikariConfig();
-    private static HikariDataSource dataSource;
-
-    static {
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/empresa?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&serverTimezone=Europe/Madrid");
+    private static HikariDataSource dataSource;    static {
+        config.setJdbcUrl("jdbc:mysql://localhost:4000/jbdc?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&serverTimezone=Europe/Madrid");
         config.setUsername("user");
         config.setPassword("password");
         config.addDataSourceProperty("maximumPoolSize", 1);
